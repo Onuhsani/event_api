@@ -73,4 +73,21 @@ class EventController extends Controller
 
         return response('', 203);
     }
+
+    public function past()
+    {
+        //
+    }
+
+
+    public function today()
+    {
+        //
+    }
+
+
+    public function future()
+    {
+        //
+    }
 }
