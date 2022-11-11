@@ -25,11 +25,6 @@ class SubscriptionController extends Controller
         ]);
     }
 
-    public function unSubscribe(Subscription $subscription)
-    {
-        //
-    }
-
     public function subscriptions(Request $request)
     {  
        return SubscriptionResource::collection(Subscription::where('event_id', $request->event_id)->paginate());

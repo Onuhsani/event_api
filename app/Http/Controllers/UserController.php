@@ -10,12 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function register(Request $request)
     {
         $request->validate([
@@ -81,25 +76,14 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(Request $request, User $user)
     {
 
         return new UserResource($user);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, User $user)
     {
         $request->validate([
@@ -107,9 +91,6 @@ class UserController extends Controller
             'email' => 'required | email',
             'password' => 'required | max:15',
         ]);
-        // if($request->user()->id !== Auth::user()->id){
-        //     return abort(403, "Un-authorized");
-        // }
 
         $user->update([
             'name' => $request->name,
