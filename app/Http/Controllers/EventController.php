@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Http\Resources\EventResource;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -112,32 +113,7 @@ class EventController extends Controller
 
     public function past()
     {
-        $now = date('y-m-d');
-
-        $dates = Event::pluck('date');
-
-        // $date_vals = [];
-
-        // foreach($dates as $date){
-        //     if($date > $now){
-        //         $date_vals[] = $date; 
-        //     }
-        // }
-        // $events = [];
-        // foreach($date_vals as $date_val){
-        //     $events [] = Event::where('date', $date_val); 
-        // }
-
-        //    echo '<pre>';
-        //     var_dump($now);
-        // echo '</pre>';
-        // exit;
-
-        $events = Event::orderBy('date')
-                    ->get()
-                    ->groupBy(function($event) {
-                    return $event->date >= now() ? $event : '';
-                    });
+        $events = Event::whereDate('date', '<', Carbon::today())->get();
         return EventResource::collection($events);
 
     }
@@ -146,13 +122,15 @@ class EventController extends Controller
 
     public function today()
     {
-        //
+        $events = Event::whereDate('date', '=', Carbon::today())->get();
+        return EventResource::collection($events);
     }
 
 
 
     public function future()
     {
-        //
+        $events = Event::whereDate('date', '>', Carbon::today())->get();
+        return EventResource::collection($events);
     }
 }
