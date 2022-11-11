@@ -12,11 +12,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class SubscriptionController extends Controller
 {
-    public function index()
-    {
-        //
-    }
-
     public function subscribe(StoreSubscriptionRequest $request)
     {
         $sub = Subscription::create([
@@ -36,19 +31,7 @@ class SubscriptionController extends Controller
     }
 
     public function subscriptions(Request $request)
-    {
-        
-
-        // $request->validate([
-        //     'event_id' => 'required',
-        // ]);
-
-        // $sub = $request->event_id;
-        // echo '<pre>';
-        //     var_dump($sub);
-        // echo '</pre>';
-        // exit;
-       
+    {  
        return SubscriptionResource::collection(Subscription::where('event_id', $request->event_id)->paginate());
     }
 }
