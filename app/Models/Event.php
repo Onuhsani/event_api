@@ -18,8 +18,13 @@ class Event extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function subscriptions()
+    public function subs()
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'event_id';   
     }
 }

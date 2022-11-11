@@ -20,8 +20,8 @@ Route::middleware('auth:api')->group(function(){
         Route::put('user/update/{user}', [UserController::class, 'update'])->name('user.update');
         Route::get('user/{user}', [UserController::class, 'show'])->name('user.show');
     
-        Route::get('subscriptions/{event}', [SubscriptionController::class, 'index'])->name('subscription.index');
-        Route::post('subscription', [SubscriptionController::class, 'store'])->name('subscription.store');
+        Route::get('subscriptions', [SubscriptionController::class, 'subscriptions'])->name('subscription.subscriptions');
+        Route::post('subscription', [SubscriptionController::class, 'subscribe'])->name('subscription.subscribe');
         //Route::get('subscriptions/{event}', [SubscriptionController::class, 'show'])->name('subscription.show');
         Route::delete('subscription/{subscription}', [SubscriptionController::class, 'destroy'])->name('subscription.destroy');
     

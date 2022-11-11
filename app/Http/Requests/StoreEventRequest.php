@@ -28,7 +28,7 @@ class StoreEventRequest extends FormRequest
             'description'=>'required',
             'date'=>'required',
             'payment_status' => 'required',
-            'user_id' =>'required'
+            //'user_id' =>'required'
         ];
     }
 }

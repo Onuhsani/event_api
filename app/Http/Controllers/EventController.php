@@ -8,6 +8,8 @@ use App\Http\Requests\UpdateEventRequest;
 use App\Http\Resources\EventResource;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class EventController extends Controller
 {
@@ -18,7 +20,14 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-        return EventResource::collection(Event::all());
+        $user = JWTAuth::user()->id;
+
+        // echo '<pre>';
+        //     var_dump($user);
+        // echo '</pre>';
+        // exit;
+
+        return EventResource::collection(Event::where('user_id', $user)->paginate());
     }
 
     /**
@@ -29,11 +38,23 @@ class EventController extends Controller
      */
     public function store(StoreEventRequest $request)
     {
-        $data = $request->all();
+        // dd($request);
+        // $data = $request->all();
+        // dd($request->user()->id);
+        // $data['user_id'] = $request->user()->id;
 
-        $event = Event::create($data);
+        $event = Event::create([
+            'user_id' =>JWTAuth::user()->id,
+            'name'=>$request->name,
+            'description'=>$request->description,
+            'date'=>$request->date,
+            'payment_status' => $request->payment_status,
+        ]);
 
-        return $event;
+        return response()->json([
+            'status' => 'success',
+            'user' => $event,
+        ]);
     }
 
     /**
@@ -44,6 +65,10 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
+        $user = JWTAuth::user()->id;
+        if($user !== $event->user_id){
+            return abort(403, 'Un-Authorized');
+        }
         return new EventResource($event);
     }
 
@@ -56,6 +81,11 @@ class EventController extends Controller
      */
     public function update(UpdateEventRequest $request, Event $event)
     {
+        $user = JWTAuth::user()->id;
+        if($user !== $event->user_id){
+            return abort(403, 'Un-Authorized');
+        }
+
         $event->update($request->all());
 
         return new EventResource($event);
@@ -69,15 +99,22 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
+        $user = JWTAuth::user()->id;
+        if($user !== $event->user_id){
+            return abort(403, 'Un-Authorized');
+        }
+
         $event->delete();
 
         return response('', 203);
     }
 
+
     public function past()
     {
         //
     }
+
 
 
     public function today()
@@ -86,6 +123,7 @@ class EventController extends Controller
     }
 
 
+    
     public function future()
     {
         //

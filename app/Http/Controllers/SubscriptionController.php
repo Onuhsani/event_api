@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Subscription;
 use App\Http\Requests\StoreSubscriptionRequest;
 use App\Http\Requests\UpdateSubscriptionRequest;
+use App\Http\Resources\SubscriptionResource;
+use App\Models\Event;
+use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class SubscriptionController extends Controller
 {
@@ -13,25 +17,38 @@ class SubscriptionController extends Controller
         //
     }
 
-    public function store(StoreSubscriptionRequest $request)
+    public function subscribe(StoreSubscriptionRequest $request)
+    {
+        $sub = Subscription::create([
+            'user_id' => JWTAuth::user()->id,
+            'event_id' => $request->event_id,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'subscription' => $sub,
+        ]);
+    }
+
+    public function unSubscribe(Subscription $subscription)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateSubscriptionRequest  $request
-     * @param  \App\Models\Subscription  $subscription
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateSubscriptionRequest $request, Subscription $subscription)
+    public function subscriptions(Request $request)
     {
-        //
-    }
+        
 
-    public function destroy(Subscription $subscription)
-    {
-        //
+        // $request->validate([
+        //     'event_id' => 'required',
+        // ]);
+
+        // $sub = $request->event_id;
+        // echo '<pre>';
+        //     var_dump($sub);
+        // echo '</pre>';
+        // exit;
+       
+       return SubscriptionResource::collection(Subscription::where('event_id', $request->event_id)->paginate());
     }
 }
